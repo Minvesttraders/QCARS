@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Car Detail</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/css/styles.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/appwrite@8.4.0"></script>
+  <script src="assets/js/config.js" defer></script>
+  <script src="assets/js/app.js" defer></script>
+</head>
+<body class="bg-gray-100 text-gray-800 p-4">
+  <button id="backFeed" class="mb-4 px-3 py-1 bg-gray-300 rounded">← Back</button>
+  <h1 id="detailTitle" class="text-3xl font-bold mb-2"></h1>
+  <div id="detailGallery" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4"></div>
+  <p id="detailModel"></p>
+  <p id="detailCondition"></p>
+  <p id="detailPrice" class="text-[#00C9B8] font-semibold"></p>
+  <p id="detailDesc" class="mt-2"></p>
+</body>
+</html>
