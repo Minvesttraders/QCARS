@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Nastaliq+Urdu&display=swap');
+
+body { font-family: 'Inter', sans-serif; }
+.font-urdu { font-family: 'Noto Nastaliq Urdu', serif; }
+.hover-3d { transition: transform .3s ease, box-shadow .3s ease; }
+.hover-3d:hover {
+  transform: translateY(-8px) rotateX(2deg);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+.fade-scale {
+  transition: opacity .3s ease, transform .3s ease;
+  transform: scale(0.95);
+  opacity: 0;
+}
+.fade-scale.active {
+  transform: scale(1);
+  opacity: 1;
+}
+.blur-bg { backdrop-filter: blur(4px); }
