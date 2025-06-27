@@ -1,0 +1,10 @@
+/* src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Agar aap Inter font ko globally set karna chahte hain */
+body {
+  font-family: 'Inter', sans-serif;
+}
+
