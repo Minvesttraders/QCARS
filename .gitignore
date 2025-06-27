@@ -1,0 +1,10 @@
+# macOS, editor files
+.DS_Store
+*.swp
+
+# node_modules (if any)
+node_modules/
+
+# logs, env files
+*.log
+.env
