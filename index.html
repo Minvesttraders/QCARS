@@ -1,974 +1,830 @@
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8" />
-            <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <title>QCARS App</title>
-            <!-- Google Fonts - Inter for clean typography -->
-            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
-            <!-- Tailwind CSS CDN - (Development use. For production, integrate via PostCSS) -->
-            <script src="https://cdn.tailwindcss.com"></script>
-            <!-- Font Awesome for icons -->
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-            <style>
-                /* Custom scrollbar for better UX in chat */
-                .custom-scrollbar::-webkit-scrollbar {
-                    width: 8px;
-                }
-
-                .custom-scrollbar::-webkit-scrollbar-track {
-                    background: #f1f1f1;
-                    border-radius: 10px;
-                }
-
-                .custom-scrollbar::-webkit-scrollbar-thumb {
-                    background: #888;
-                    border-radius: 10px;
-                }
-
-                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-                    background: #555;
-               } 
-
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Awesome -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
-  <!-- Google Fonts: Inter + Noto Nastaliq Urdu -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet"/>
-
-  <style>
-    body { font-family: 'Inter', sans-serif; }
-    .font-urdu { font-family: 'Noto Nastaliq Urdu', serif; }
-    .hover-3d { transition: transform .3s ease, box-shadow .3s ease; }
-    .hover-3d:hover { transform: translateY(-8px) rotateX(2deg); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-    .fade-scale { transition: opacity .3s ease, transform .3s ease; transform: scale(0.95); opacity: 0; }
-    .fade-scale.active { transform: scale(1); opacity: 1; }
-    .blur-bg { backdrop-filter: blur(4px); }
-  </style>
-
-  <!-- Appwrite SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/appwrite@8.4.0"></script>
-  <script>
-    // ==== CONFIG ====
-    const APPWRITE = {
-      endpoint: 'https://cloud.appwrite.io/v1',
-      projectId: '685ed548003693db4ec5',
-      apiKey: 'standard_3ba1605ea035dabbcf64046a7094e9418cf362eef3971d71408ae7c',
-      databases: {
-        id: 'default',
-        collections: {
-          users: 'users',
-          posts: 'posts',
-          chats: 'chats'
-        }
-      },
-      storage: { bucket: 'car_images' }
-    };
-
-    // ==== INIT CLIENT ====
-    const client  = new Appwrite.Client()
-                      .setEndpoint(APPWRITE.endpoint)
-                      .setProject(APPWRITE.projectId);
-    const account   = new Appwrite.Account(client);
-    const db        = new Appwrite.Databases(client);
-    const storage   = new Appwrite.Storage(client);
-    const realtime  = new Appwrite.Realtime(client);
-
-    // App state
-    let currentUser = null;
-    let currentRole = 'guest';
-    let paymentsRequired = false;
-    let lang = 'en'; // default
-
-    const STR = {
-      en: {
-        login: 'Log In',
-        signup: 'Sign Up',
-        email: 'Email',
-        password: 'Password',
-        switchTo: 'Switch to Urdu',
-        search: 'Search cars by name or model...',
-        post: '+ Post Car',
-        name: 'Car Name',
-        model: 'Model',
-        condition: 'Condition',
-        price: 'Price',
-        description: 'Description',
-        upload: 'Upload Images (max 20)',
-        publish: 'Publish',
-        profile: 'My Profile',
-        globalChat: 'Global Chat',
-        privateChat: 'Private Chat',
-        send: 'Send',
-        adminPanel: 'Admin Dashboard',
-        paymentsToggle: 'Require Membership Payment',
-        approve: 'Approve',
-        reject: 'Reject',
-        mute: 'Mute',
-        promote: 'Promote',
-        rating: 'Rating'
-      },
-      ur: {
-        login: 'لاگ ان کریں',
-        signup: 'نیا اکاؤنٹ',
-        email: 'ای میل',
-        password: 'پاس ورڈ',
-        switchTo: 'Switch to English',
-        search: 'نام یا ماڈل سے تلاش کریں...',
-        post: '+ کار پوسٹ کریں',
-        name: 'گاڑی کا نام',
-        model: 'ماڈل',
-        condition: 'حالت',
-        price: 'قیمت',
-        description: 'تفصیل',
-        upload: 'تصاویر اپلوڈ کریں (زیادہ سے زیادہ 20)',
-        publish: 'شائع کریں',
-        profile: 'میری پروفائل',
-        globalChat: 'عالمی چیٹ',
-        privateChat: 'پرائیویٹ چیٹ',
-        send: 'بھیجیں',
-        adminPanel: 'ایڈمن ڈیش بورڈ',
-        paymentsToggle: 'رکنیت کی ادائیگی درکار ہے',
-        approve: 'منظور کریں',
-        reject: 'رد کریں',
-        mute: 'خاموش کریں',
-        promote: 'ترقی دیں',
-        rating: 'درجہ بندی'
-      }
-    };
-  </script>
-</head>
-<body>
-            <div id="root"></div>
-            <script type="module" src="/src/main.jsx"></script>pp
-<body class="bg-gray-100 text-gray-800">
-   </body>
-
-  <!-- ========== AUTH MODAL ========== -->
-  <div id="authModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-    <div id="authPanel" class="bg-white rounded-lg p-6 w-80 fade-scale">
-      <h2 id="authTitle" class="text-2xl mb-4 text-center">Log In</h2>
-      <form id="authForm" class="space-y-4">
-        <input id="authEmail" type="email" placeholder="Email" required
-               class="w-full px-3 py-2 border rounded"/>
-        <input id="authPassword" type="password" placeholder="Password" required
-               class="w-full px-3 py-2 border rounded"/>
-        <button type="submit" class="w-full py-2 bg-[#00C9B8] text-[#1A202C] rounded">
-          Log In
-        </button>
-      </form>
-      <p id="authSwitch" class="mt-4 text-center text-sm text-gray-600 cursor-pointer">
-        Don't have an account? Sign Up
-      </p>
-    </div>
-  </div>
-
-  <!-- ========== HEADER ========== -->
-  <header class="bg-[#1A202C] text-white px-4 py-3 flex flex-wrap justify-between items-center shadow-md">
-    <div class="flex items-center gap-4">
-      <div class="text-2xl font-bold text-[#00C9B8]">Quetta Cars</div>
-      <input id="searchInput" type="text"
-             placeholder="Search cars by name or model..."
-             class="hidden sm:block px-4 py-2 rounded-md bg-[#2D3748] text-sm text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#00C9B8] w-64"/>
-    </div>
-    <div class="flex items-center gap-3 mt-3 sm:mt-0">
-      <button id="langToggle" class="px-3 py-1 bg-[#00C9B8] text-[#1A202C] rounded hover:scale-105 transition text-sm font-semibold">
-        Switch to Urdu
-      </button>
-      <button id="postBtn" class="hidden sm:block px-4 py-2 bg-[#00C9B8] text-[#1A202C] rounded hover:scale-105 transition font-medium">
-        + Post Car
-      </button>
-      <button id="profileBtn" class="text-xl hover:text-[#00C9B8]">
-        <i class="fas fa-user-circle"></i>
-      </button>
-      <button id="chatBtn" class="text-xl hover:text-[#00C9B8]">
-        <i class="fas fa-comments"></i>
-      </button>
-    </div>
-  </header>
-
-  <!-- ========== MAIN FEED ========== -->
-  <main id="feed" class="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-    <!-- Car cards will be injected here -->
-  </main>
-
-  <!-- ========== POST MODAL ========== -->
-  <div id="postModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-    <div class="bg-white rounded-lg w-11/12 md:w-2/3 lg:w-1/2 p-6 relative fade-scale">
-      <button id="closePost" class="absolute top-4 right-4 text-gray-600"><i class="fas fa-times"></i></button>
-      <h2 class="text-2xl mb-4">+ Post Car</h2>
-      <form id="postForm" class="space-y-4 max-h-[80vh] overflow-auto">
-        <input name="title" type="text" placeholder="Car Name" required class="w-full px-3 py-2 border rounded"/>
-        <input name="model" type="text" placeholder="Model" required class="w-full px-3 py-2 border rounded"/>
-        <input name="condition" type="text" placeholder="Condition" required class="w-full px-3 py-2 border rounded"/>
-        <input name="price" type="number" placeholder="Price" required class="w-full px-3 py-2 border rounded"/>
-        <textarea name="description" rows="4" placeholder="Description" class="w-full px-3 py-2 border rounded"></textarea>
-        <div>
-          <label class="block mb-2">Upload Images (max 20)</label>
-          <input id="imgInput" type="file" multiple accept="image/*" class="w-full"/>
-          <div id="imgPreview" class="grid grid-cols-3 gap-2 mt-2"></div>
-        </div>
-        <button type="submit" class="w-full py-2 bg-[#00C9B8] text-[#1A202C] rounded">Publish</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- ========== CAR DETAIL MODAL ========== -->
-  <div id="detailModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-    <div class="bg-white rounded-lg w-11/12 md:w-3/4 lg:w-1/2 p-6 relative fade-scale overflow-auto max-h-[90vh]">
-      <button id="closeDetail" class="absolute top-4 right-4 text-gray-600"><i class="fas fa-times"></i></button>
-      <div id="detailGallery" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4"></div>
-      <h2 id="detailTitle" class="text-2xl font-bold mb-2"></h2>
-      <p id="detailModel" class="text-gray-600 mb-2"></p>
-      <p id="detailCondition" class="text-gray-600 mb-2"></p>
-      <p id="detailPrice" class="text-[#00C9B8] font-semibold mb-4"></p>
-      <p id="detailDesc" class="mb-4"></p>
-    </div>
-  </div>
-
-  <!-- ========== CHAT MODAL ========== -->
-  <div id="chatModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-    <div class="bg-white rounded-lg w-11/12 md:w-2/3 lg:w-1/2 p-4 relative fade-scale">
-      <button id="closeChat" class="absolute top-4 right-4 text-gray-600"><i class="fas fa-times"></i></button>
-      <div class="flex justify-between items-center mb-4">
-        <h2 id="chatTitle" class="text-xl">Global Chat</h2>
-        <button id="switchChat" class="px-2 py-1 bg-gray-200 rounded text-sm">Private Chat</button>
-      </div>
-      <div id="chatBody" class="h-64 overflow-auto mb-4 space-y-2"></div>
-      <div class="flex items-center">
-        <input id="chatInput" type="text" placeholder="Type a message" class="flex-1 px-3 py-2 border rounded"/>
-        <button id="sendChat" class="ml-2 px-4 py-2 bg-[#00C9B8] text-[#1A202C] rounded"><i class="fas fa-paper-plane"></i></button>
-        <button id="voiceBtn" class="ml-2 px-3 py-2 bg-gray-200 rounded"><i class="fas fa-microphone"></i></button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ========== PROFILE MODAL ========== -->
-  <div id="profileModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-    <div class="bg-white rounded-lg w-11/12 md:w-2/3 lg:w-1/2 p-6 relative fade-scale overflow-auto max-h-[90vh]">
-      <button id="closeProfile" class="absolute top-4 right-4 text-gray-600"><i class="fas fa-times"></i></button>
-      <div class="flex items-center gap-4 mb-6">
-        <img id="profilePic" src="" alt="Profile" class="w-20 h-20 rounded-full object-cover border"/>
-        <div>
-          <h2 id="profileName" class="text-2xl font-bold"></h2>
-          <p id="profileContact" class="text-gray-600"></p>
-          <p class="flex items-center gap-1">
-            <i class="fas fa-star text-yellow-400"></i>
-            <span id="profileRating">0.0</span>/
-            <span>5</span>
-          </p>
-        </div>
-      </div>
-      <div id="profilePosts" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-    </div>
-  </div>
-
-  <!-- ========== ADMIN PANEL ========== -->
-  <div id="adminPanel" class="fixed top-0 right-0 bg-white w-80 h-full shadow-lg p-4 overflow-auto hidden">
-    <h2 class="text-2xl mb-4">Admin Dashboard</h2>
-    <div class="mb-4">
-      <label class="flex items-center gap-2">
-        <input type="checkbox" id="paymentsToggle"/>
-        <span>Require Membership Payment</span>
-      </label>
-    </div>
-    <div id="userApprovals" class="mb-6">
-      <h3 class="text-lg font-semibold mb-2">Pending Users</h3>
-      <!-- pending user cards -->
-    </div>
-    <div id="moderation" class="mb-6">
-      <h3 class="text-lg font-semibold mb-2">Moderation</h3>
-      <!-- approve/mute/promote -->
-    </div>
-    <div id="postApprovals">
-      <h3 class="text-lg font-semibold mb-2">Post Approvals</h3>
-      <!-- posts awaiting approval -->
-    </div>
-  </div>
-
-  <!-- ========== SCRIPT LOGIC (Appwrite + UI) ========== -->
-  <script>
-  // Utility: toggle fade-scale modals
-  function openModal(id) {
-    const m = document.getElementById(id);
-    m.classList.remove('hidden');
-    setTimeout(()=> m.querySelector('.fade-scale').classList.add('active'), 10);
-  }
-  function closeModal(id) {
-    const m = document.getElementById(id);
-    m.querySelector('.fade-scale').classList.remove('active');
-    setTimeout(()=> m.classList.add('hidden'), 300);
-  }
-
-  // Language toggle
-  const langToggle = document.getElementById('langToggle');
-  function applyLang() {
-    document.documentElement.lang = lang;
-    document.getElementById('authTitle').innerText = STR[lang][ currentUser? 'login':'signup' ];
-    document.getElementById('authEmail').placeholder = STR[lang].email;
-    document.getElementById('authPassword').placeholder = STR[lang].password;
-    authForm.querySelector('button').innerText = currentUser? STR[lang].login:STR[lang].signup;
-    authSwitch.innerText = currentUser? STR[lang].signup:STR[lang].login;
-    document.getElementById('searchInput').placeholder = STR[lang].search;
-    postBtn.innerText = STR[lang].post;
-    document.querySelector('#postForm [name="title"]').placeholder = STR[lang].name;
-    document.querySelector('#postForm [name="model"]').placeholder = STR[lang].model;
-    document.querySelector('#postForm [name="condition"]').placeholder = STR[lang].condition;
-    document.querySelector('#postForm [name="price"]').placeholder = STR[lang].price;
-    document.querySelector('#postForm textarea').placeholder = STR[lang].description;
-    document.querySelector('#postForm label').innerText = STR[lang].upload;
-    document.querySelector('#postForm button[type="submit"]').innerText = STR[lang].publish;
-    document.getElementById('profileBtn').title = STR[lang].profile;
-    document.getElementById('chatBtn').title = STR[lang].globalChat;
-    document.getElementById('adminPanel').querySelector('h2').innerText = STR[lang].adminPanel;
-    langToggle.innerText = lang==='en'? STR[lang].switchTo : STR[lang].switchTo;
-  }
-  langToggle.onclick = ()=>{
-    lang = lang==='en'? 'ur':'en';
-    applyLang();
-  };
-
-  // ===== AUTH =====
-  const authModal  = document.getElementById('authModal');
-  const authForm   = document.getElementById('authForm');
-  const authSwitch = document.getElementById('authSwitch');
-  let isSignup     = false;
-
-  function showAuth(signup=false) {
-    isSignup = signup;
-    openModal('authModal');
-    document.getElementById('authTitle').innerText = signup? STR[lang].signup:STR[lang].login;
-    authForm.querySelector('button').innerText = signup? STR[lang].signup:STR[lang].login;
-    authSwitch.innerText = signup? STR[lang].login:STR[lang].signup;
-    document.getElementById('authEmail').value = '';
-    document.getElementById('authPassword').value = '';
-  }
-  authSwitch.onclick = ()=> showAuth(!isSignup);
-  authForm.onsubmit = async e=>{
-    e.preventDefault();
-    const email = authEmail.value;
-    const pw    = authPassword.value;
-    try {
-      let session;
-      if (isSignup) {
-        session = await account.create('unique()', email, pw);
-        // create user doc
-        await db.createDocument(
-          APPWRITE.databases.id,
-          APPWRITE.databases.collections.users,
-          session.$id,
-          { email, status: paymentsRequired?'payment_pending':'active', role:'user', joinedAt:new Date().toISOString() }
-        );
-        // if first user: make admin
-        const list = await db.listDocuments(APPWRITE.databases.id, APPWRITE.databases.collections.users, [], 1, 0, undefined, ['\$createdAt']);
-        if (list.total===1) {
-          currentRole = 'admin';
-          await db.updateDocument(APPWRITE.databases.id, APPWRITE.databases.collections.users, session.$id, { role:'admin', status:'active' });
-        }
-      } else {
-        session = await account.createEmailSession(email, pw);
-      }
-      currentUser = await account.get();
-      closeModal('authModal');
-      initApp();
-    } catch(err) {
-      alert(err.message);
-    }
-  };
-
-  // ===== INIT APP =====
-  async function initApp(){
-    try {
-      currentUser = await account.get();
-    } catch {
-      return showAuth(false);
-    }
-    // fetch role and settings
-    const udoc = await db.getDocument(APPWRITE.databases.id, APPWRITE.databases.collections.users, currentUser.$id);
-    currentRole = udoc.role;
-    paymentsRequired = udoc.paymentsRequired || false;
-    // show main UI
-    buildApp();
-  }
-
-  // ===== BUILD APP UI =====
-  const header = document.querySelector('header');
-  const mainFeed = document.getElementById('feed');
-  const postBtn = document.getElementById('postBtn');
-  const profileBtn = document.getElementById('profileBtn');
-  const chatBtn = document.getElementById('chatBtn');
-  const closePost = document.getElementById('closePost');
-  const postModal = document.getElementById('postModal');
-  const imgInput = document.getElementById('imgInput');
-  const imgPreview = document.getElementById('imgPreview');
-  const postForm = document.getElementById('postForm');
-  const closeDetail = document.getElementById('closeDetail');
-  const detailModal = document.getElementById('detailModal');
-  const closeChat = document.getElementById('closeChat');
-  const chatModal = document.getElementById('chatModal');
-  const switchChat = document.getElementById('switchChat');
-  const sendChat = document.getElementById('sendChat');
-  const chatBody = document.getElementById('chatBody');
-  const chatInput = document.getElementById('chatInput');
-  const voiceBtn = document.getElementById('voiceBtn');
-  const profileModal = document.getElementById('profileModal');
-  const closeProfile = document.getElementById('closeProfile');
-  const profilePosts = document.getElementById('profilePosts');
-  const paymentsToggle = document.getElementById('paymentsToggle');
-  const adminPanel = document.getElementById('adminPanel');
-
-  // Search
-  document.getElementById('searchInput').oninput = e => loadFeed(e.target.value);
-
-  // Modals
-  postBtn.onclick = ()=> openModal('postModal');
-  closePost.onclick = ()=> closeModal('postModal');
-  profileBtn.onclick = ()=> openProfile(currentUser.$id);
-  closeProfile.onclick = ()=> closeModal('profileModal');
-  chatBtn.onclick = ()=> openModal('chatModal');
-  closeChat.onclick = ()=> closeModal('chatModal');
-  closeDetail.onclick = ()=> closeModal('detailModal');
-
-  // Image preview
-  imgInput.onchange = ()=>{
-    imgPreview.innerHTML = '';
-    Array.from(imgInput.files).slice(0,20).forEach(f=>{
-      const r = new FileReader();
-      r.onload = e=>{
-        const img = document.createElement('img');
-        img.src = e.target.result;
-        img.className = 'w-full h-24 object-cover rounded';
-        imgPreview.appendChild(img);
-      };
-      r.readAsDataURL(f);
-    });
-  };
-
-  // ===== LOAD FEED =====
-  async function loadFeed(filter=''){
-    const resp = await db.listDocuments(
-      APPWRITE.databases.id,
-      APPWRITE.databases.collections.posts,
-      [],
-      100, 0,
-      filter?`title~=${filter}`:undefined,
-      ['-createdAt']
-    );
-    mainFeed.innerHTML = '';
-    resp.documents.forEach(post=>{
-      const card = document.createElement('div');
-      card.className = 'bg-white p-4 rounded-lg hover-3d cursor-pointer';
-      card.innerHTML = `
-        <img src="${post.imageURLs?.[0]||''}" class="w-full h-40 object-cover rounded mb-2"/>
-        <h3 class="font-bold">${post.title}</h3>
-        <p class="text-gray-600 text-sm">${post.model}</p>
-        <p class="text-[#00C9B8] font-semibold mt-1">$${post.price}</p>
-      `;
-      card.onclick = ()=> openDetail(post);
-      mainFeed.appendChild(card);
-    });
-  }
-
-  // Realtime feed
-  realtime.subscribe(
-    [`databases.${APPWRITE.databases.id}.collections.${APPWRITE.databases.collections.posts}.documents`],
-    () => loadFeed(document.getElementById('searchInput').value)
-  );
-
-  // ===== POST CREATION =====
-  postForm.onsubmit = async e=>{
-    e.preventDefault();
-    const data = new FormData(e.target);
-    // create doc
-    const post = await db.createDocument(
-      APPWRITE.databases.id,
-      APPWRITE.databases.collections.posts,
-      Appwrite.ID.unique(),
-      {
-        title: data.get('title'),
-        model: data.get('model'),
-        condition: data.get('condition'),
-        price: Number(data.get('price')),
-        description: data.get('description'),
-        ownerId: currentUser.$id,
-        createdAt: new Date().toISOString()
-      }
-    );
-    // upload images
-    const files = Array.from(imgInput.files).s<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Quetta Cars – Dealer Network</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quetta Cars – The Ultimate Dealer Network</title>
 
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Awesome -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
-  <!-- Google Fonts: Inter + Noto Nastaliq Urdu -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet"/>
+    <!-- 
+      APPWRITE CONFIGURATION
+      -----------------------
+      This application connects to an Appwrite backend.
+      The necessary configuration is:
+      - Endpoint: https://cloud.appwrite.io/v1
+      - Project ID: 685ed548003693db4ec5
 
-  <style>
-    body { font-family: 'Inter', sans-serif; }
-    .font-urdu { font-family: 'Noto Nastaliq Urdu', serif; }
-    .hover-3d { transition: transform .3s ease, box-shadow .3s ease; }
-    .hover-3d:hover { transform: translateY(-8px) rotateX(2deg); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-    .fade-scale { transition: opacity .3s ease, transform .3s ease; transform: scale(0.95); opacity: 0; }
-    .fade-scale.active { transform: scale(1); opacity: 1; }
-    .blur-bg { backdrop-filter: blur(4px); }
-  </style>
+      NOTE ON API KEYS: The user-provided API key has been OMITTED for security. 
+      Client-side web applications should NOT expose API keys. The Appwrite Web SDK 
+      is designed to interact securely with your project using user sessions, 
+      not a global API key. All operations are handled based on the logged-in user's
+      permissions, which is the standard and secure practice.
+    -->
 
-  <!-- Appwrite SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/appwrite@8.4.0"></script>
-  <script>
-    // ==== CONFIG ====
-    const APPWRITE = {
-      endpoint: 'https://cloud.appwrite.io/v1',
-      projectId: '685ed548003693db4ec5',
-      apiKey: 'standard_3ba1605ea035dabbcf64046a7094e9418cf362eef3971d71408ae7c',
-      databases: {
-        id: 'default',
-        collections: {
-          users: 'users',
-          posts: 'posts',
-          chats: 'chats'
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Appwrite Web SDK CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
+
+    <!-- Custom Styles and Animations -->
+    <style>
+        :root {
+            --base-color: #1A202C;
+            --accent-color: #00C9B8;
+            --light-bg: #F7FAFC;
         }
-      },
-      storage: { bucket: 'car_images' }
-    };
-
-    // ==== INIT CLIENT ====
-    const client  = new Appwrite.Client()
-                      .setEndpoint(APPWRITE.endpoint)
-                      .setProject(APPWRITE.projectId);
-    const account   = new Appwrite.Account(client);
-    const db        = new Appwrite.Databases(client);
-    const storage   = new Appwrite.Storage(client);
-    const realtime  = new Appwrite.Realtime(client);
-
-    // App state
-    let currentUser = null;
-    let currentRole = 'guest';
-    let paymentsRequired = false;
-    let lang = 'en'; // default
-
-    const STR = {
-      en: {
-        login: 'Log In',
-        signup: 'Sign Up',
-        email: 'Email',
-        password: 'Password',
-        switchTo: 'Switch to Urdu',
-        search: 'Search cars by name or model...',
-        post: '+ Post Car',
-        name: 'Car Name',
-        model: 'Model',
-        condition: 'Condition',
-        price: 'Price',
-        description: 'Description',
-        upload: 'Upload Images (max 20)',
-        publish: 'Publish',
-        profile: 'My Profile',
-        globalChat: 'Global Chat',
-        privateChat: 'Private Chat',
-        send: 'Send',
-        adminPanel: 'Admin Dashboard',
-        paymentsToggle: 'Require Membership Payment',
-        approve: 'Approve',
-        reject: 'Reject',
-        mute: 'Mute',
-        promote: 'Promote',
-        rating: 'Rating'
-      },
-      ur: {
-        login: 'لاگ ان کریں',
-        signup: 'نیا اکاؤنٹ',
-        email: 'ای میل',
-        password: 'پاس ورڈ',
-        switchTo: 'Switch to English',
-        search: 'نام یا ماڈل سے تلاش کریں...',
-        post: '+ کار پوسٹ کریں',
-        name: 'گاڑی کا نام',
-        model: 'ماڈل',
-        condition: 'حالت',
-        price: 'قیمت',
-        description: 'تفصیل',
-        upload: 'تصاویر اپلوڈ کریں (زیادہ سے زیادہ 20)',
-        publish: 'شائع کریں',
-        profile: 'میری پروفائل',
-        globalChat: 'عالمی چیٹ',
-        privateChat: 'پرائیویٹ چیٹ',
-        send: 'بھیجیں',
-        adminPanel: 'ایڈمن ڈیش بورڈ',
-        paymentsToggle: 'رکنیت کی ادائیگی درکار ہے',
-        approve: 'منظور کریں',
-        reject: 'رد کریں',
-        mute: 'خاموش کریں',
-        promote: 'ترقی دیں',
-        rating: 'درجہ بندی'
-      }
-    };
-  </script>
+        body {
+            background-color: var(--light-bg);
+            color: var(--base-color);
+            font-family: 'Inter', 'Noto Nastaliq Urdu', sans-serif;
+        }
+        .dark-mode {
+             background-color: var(--base-color);
+             color: var(--light-bg);
+        }
+        /* 3D Card Hover Effect */
+        .car-card {
+            transform-style: preserve-3d;
+            transition: transform 0.5s, box-shadow 0.5s;
+        }
+        .car-card:hover {
+            transform: perspective(1000px) rotateY(5deg) scale(1.03);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        /* Modal Transitions */
+        .modal {
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+        .modal.hidden {
+            opacity: 0;
+            transform: scale(0.95);
+            pointer-events: none;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+        /* Language directionality */
+        [dir="rtl"] .car-card:hover {
+            transform: perspective(1000px) rotateY(-5deg) scale(1.03);
+        }
+    </style>
 </head>
-<body>
-            <div id="root"></div>
-            <script type="module" src="/src/main.jsx"></script>
-<body class="bg-gray-100 text-gray-800">
-   </body>
+<body class="antialiased">
 
-  <!-- ========== AUTH MODAL ========== -->
-  <div id="authModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-    <div id="authPanel" class="bg-white rounded-lg p-6 w-80 fade-scale">
-      <h2 id="authTitle" class="text-2xl mb-4 text-center">Log In</h2>
-      <form id="authForm" class="space-y-4">
-        <input id="authEmail" type="email" placeholder="Email" required
-               class="w-full px-3 py-2 border rounded"/>
-        <input id="authPassword" type="password" placeholder="Password" required
-               class="w-full px-3 py-2 border rounded"/>
-        <button type="submit" class="w-full py-2 bg-[#00C9B8] text-[#1A202C] rounded">
-          Log In
-        </button>
-      </form>
-      <p id="authSwitch" class="mt-4 text-center text-sm text-gray-600 cursor-pointer">
-        Don't have an account? Sign Up
-      </p>
+    <!-- Main Application Container -->
+    <div id="app-container" class="relative min-h-screen">
+
+        <!-- Header -->
+        <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-lg shadow-sm">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <i class="fas fa-car-side text-2xl" style="color: var(--accent-color);"></i>
+                    <h1 class="text-xl font-bold" data-translate-key="app_title">Quetta Cars</h1>
+                </div>
+                <div class="hidden md:flex flex-grow max-w-lg mx-4">
+                    <div class="relative w-full">
+                        <input id="search-bar" type="text" data-translate-key="search_placeholder" placeholder="Search by name or model..." class="w-full pl-10 pr-4 py-2 border rounded-full focus:outline-none focus:ring-2" style="border-color: var(--accent-color); --tw-ring-color: var(--accent-color);">
+                        <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                </div>
+                <nav class="flex items-center space-x-3">
+                    <button id="post-car-btn" class="hidden bg-teal-500 text-white px-4 py-2 rounded-full hover:bg-teal-600 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-px">
+                        <i class="fas fa-plus mr-2"></i><span data-translate-key="post_car">Post Car</span>
+                    </button>
+                    <button id="chat-btn" class="hidden text-xl p-2 rounded-full hover:bg-gray-200"><i class="fas fa-comments"></i></button>
+                    <button id="lang-toggle-btn" class="text-xl p-2 rounded-full hover:bg-gray-200"><i class="fas fa-language"></i></button>
+                    <div id="user-menu" class="relative">
+                        <button id="profile-btn-anon" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-full hover:bg-gray-300 transition-all" data-translate-key="login_signup">Login / Signup</button>
+                        <button id="profile-btn-logged-in" class="hidden w-10 h-10 bg-gray-700 text-white rounded-full flex items-center justify-center text-xl overflow-hidden">
+                             <img id="profile-avatar-sm" src="" class="hidden w-full h-full object-cover">
+                             <span id="profile-initial-sm"></span>
+                        </button>
+                        <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-xl z-50 py-1">
+                            <a href="#" id="view-profile-link" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-translate-key="my_profile">My Profile</a>
+                            <a href="#" id="admin-panel-link" class="hidden block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-translate-key="admin_panel">Admin Panel</a>
+                            <a href="#" id="logout-btn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-100 text-red-600" data-translate-key="logout">Logout</a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main id="main-content" class="container mx-auto p-4 md:p-8">
+            <div id="loader" class="text-center py-20">
+                <i class="fas fa-spinner fa-spin text-4xl" style="color: var(--accent-color);"></i>
+                <p class="mt-4 text-lg" data-translate-key="loading">Loading...</p>
+            </div>
+            <div id="main-feed" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Car cards will be injected here -->
+            </div>
+            <div id="no-posts" class="hidden text-center py-20">
+                <i class="fas fa-car-crash text-5xl text-gray-400"></i>
+                <h2 class="mt-4 text-2xl font-bold" data-translate-key="no_posts_title">No Cars Found</h2>
+                <p class="text-gray-600" data-translate-key="no_posts_desc">Check back later or be the first to post!</p>
+            </div>
+        </main>
+
     </div>
-  </div>
 
-  <!-- ========== HEADER ========== -->
-  <header class="bg-[#1A202C] text-white px-4 py-3 flex flex-wrap justify-between items-center shadow-md">
-    <div class="flex items-center gap-4">
-      <div class="text-2xl font-bold text-[#00C9B8]">Quetta Cars</div>
-      <input id="searchInput" type="text"
-             placeholder="Search cars by name or model..."
-             class="hidden sm:block px-4 py-2 rounded-md bg-[#2D3748] text-sm text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#00C9B8] w-64"/>
-    </div>
-    <div class="flex items-center gap-3 mt-3 sm:mt-0">
-      <button id="langToggle" class="px-3 py-1 bg-[#00C9B8] text-[#1A202C] rounded hover:scale-105 transition text-sm font-semibold">
-        Switch to Urdu
-      </button>
-      <button id="postBtn" class="hidden sm:block px-4 py-2 bg-[#00C9B8] text-[#1A202C] rounded hover:scale-105 transition font-medium">
-        + Post Car
-      </button>
-      <button id="profileBtn" class="text-xl hover:text-[#00C9B8]">
-        <i class="fas fa-user-circle"></i>
-      </button>
-      <button id="chatBtn" class="text-xl hover:text-[#00C9B8]">
-        <i class="fas fa-comments"></i>
-      </button>
-    </div>
-  </header>
+    <!-- Modals -->
 
-  <!-- ========== MAIN FEED ========== -->
-  <main id="feed" class="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-    <!-- Car cards will be injected here -->
-  </main>
-
-  <!-- ========== POST MODAL ========== -->
-  <div id="postModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-    <div class="bg-white rounded-lg w-11/12 md:w-2/3 lg:w-1/2 p-6 relative fade-scale">
-      <button id="closePost" class="absolute top-4 right-4 text-gray-600"><i class="fas fa-times"></i></button>
-      <h2 class="text-2xl mb-4">+ Post Car</h2>
-      <form id="postForm" class="space-y-4 max-h-[80vh] overflow-auto">
-        <input name="title" type="text" placeholder="Car Name" required class="w-full px-3 py-2 border rounded"/>
-        <input name="model" type="text" placeholder="Model" required class="w-full px-3 py-2 border rounded"/>
-        <input name="condition" type="text" placeholder="Condition" required class="w-full px-3 py-2 border rounded"/>
-        <input name="price" type="number" placeholder="Price" required class="w-full px-3 py-2 border rounded"/>
-        <textarea name="description" rows="4" placeholder="Description" class="w-full px-3 py-2 border rounded"></textarea>
-        <div>
-          <label class="block mb-2">Upload Images (max 20)</label>
-          <input id="imgInput" type="file" multiple accept="image/*" class="w-full"/>
-          <div id="imgPreview" class="grid grid-cols-3 gap-2 mt-2"></div>
+    <!-- Login/Signup Modal -->
+    <div id="auth-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-md transform transition-all">
+            <div class="p-6">
+                <!-- Login View -->
+                <div id="login-view">
+                    <h2 class="text-2xl font-bold mb-4" data-translate-key="login_title">Welcome Back</h2>
+                    <form id="login-form">
+                        <div class="mb-4">
+                            <label class="block mb-1 font-semibold" for="login-email" data-translate-key="email">Email</label>
+                            <input type="email" id="login-email" class="w-full p-2 border rounded" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block mb-1 font-semibold" for="login-password" data-translate-key="password">Password</label>
+                            <input type="password" id="login-password" class="w-full p-2 border rounded" required>
+                        </div>
+                        <button type="submit" class="w-full bg-teal-500 text-white p-3 rounded-lg font-bold hover:bg-teal-600 transition-all" data-translate-key="login">Login</button>
+                    </form>
+                    <p class="text-center mt-4">
+                        <span data-translate-key="no_account">Don't have an account?</span>
+                        <a href="#" id="show-signup" class="font-bold" style="color: var(--accent-color);" data-translate-key="signup_now">Sign up now</a>
+                    </p>
+                </div>
+                <!-- Signup View -->
+                <div id="signup-view" class="hidden">
+                    <h2 class="text-2xl font-bold mb-4" data-translate-key="signup_title">Create Account</h2>
+                    <form id="signup-form">
+                         <div class="mb-4">
+                            <label class="block mb-1 font-semibold" for="signup-name" data-translate-key="full_name">Full Name</label>
+                            <input type="text" id="signup-name" class="w-full p-2 border rounded" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block mb-1 font-semibold" for="signup-showroom" data-translate-key="showroom_name">Showroom Name (Optional)</label>
+                            <input type="text" id="signup-showroom" class="w-full p-2 border rounded">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block mb-1 font-semibold" for="signup-email" data-translate-key="email">Email</label>
+                            <input type="email" id="signup-email" class="w-full p-2 border rounded" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block mb-1 font-semibold" for="signup-password" data-translate-key="password">Password</label>
+                            <input type="password" id="signup-password" class="w-full p-2 border rounded" required>
+                        </div>
+                        <button type="submit" class="w-full bg-teal-500 text-white p-3 rounded-lg font-bold hover:bg-teal-600 transition-all" data-translate-key="signup">Sign Up</button>
+                    </form>
+                    <p class="text-center mt-4">
+                        <span data-translate-key="has_account">Already have an account?</span>
+                        <a href="#" id="show-login" class="font-bold" style="color: var(--accent-color);" data-translate-key="login_now">Login now</a>
+                    </p>
+                </div>
+                <div id="auth-error" class="hidden mt-4 text-red-500 p-3 bg-red-100 rounded"></div>
+            </div>
         </div>
-        <button type="submit" class="w-full py-2 bg-[#00C9B8] text-[#1A202C] rounded">Publish</button>
-      </form>
     </div>
-  </div>
-
-  <!-- ========== CAR DETAIL MODAL ========== -->
-  <div id="detailModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-    <div class="bg-white rounded-lg w-11/12 md:w-3/4 lg:w-1/2 p-6 relative fade-scale overflow-auto max-h-[90vh]">
-      <button id="closeDetail" class="absolute top-4 right-4 text-gray-600"><i class="fas fa-times"></i></button>
-      <div id="detailGallery" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4"></div>
-      <h2 id="detailTitle" class="text-2xl font-bold mb-2"></h2>
-      <p id="detailModel" class="text-gray-600 mb-2"></p>
-      <p id="detailCondition" class="text-gray-600 mb-2"></p>
-      <p id="detailPrice" class="text-[#00C9B8] font-semibold mb-4"></p>
-      <p id="detailDesc" class="mb-4"></p>
-    </div>
-  </div>
-
-  <!-- ========== CHAT MODAL ========== -->
-  <div id="chatModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-    <div class="bg-white rounded-lg w-11/12 md:w-2/3 lg:w-1/2 p-4 relative fade-scale">
-      <button id="closeChat" class="absolute top-4 right-4 text-gray-600"><i class="fas fa-times"></i></button>
-      <div class="flex justify-between items-center mb-4">
-        <h2 id="chatTitle" class="text-xl">Global Chat</h2>
-        <button id="switchChat" class="px-2 py-1 bg-gray-200 rounded text-sm">Private Chat</button>
-      </div>
-      <div id="chatBody" class="h-64 overflow-auto mb-4 space-y-2"></div>
-      <div class="flex items-center">
-        <input id="chatInput" type="text" placeholder="Type a message" class="flex-1 px-3 py-2 border rounded"/>
-        <button id="sendChat" class="ml-2 px-4 py-2 bg-[#00C9B8] text-[#1A202C] rounded"><i class="fas fa-paper-plane"></i></button>
-        <button id="voiceBtn" class="ml-2 px-3 py-2 bg-gray-200 rounded"><i class="fas fa-microphone"></i></button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ========== PROFILE MODAL ========== -->
-  <div id="profileModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-    <div class="bg-white rounded-lg w-11/12 md:w-2/3 lg:w-1/2 p-6 relative fade-scale overflow-auto max-h-[90vh]">
-      <button id="closeProfile" class="absolute top-4 right-4 text-gray-600"><i class="fas fa-times"></i></button>
-      <div class="flex items-center gap-4 mb-6">
-        <img id="profilePic" src="" alt="Profile" class="w-20 h-20 rounded-full object-cover border"/>
-        <div>
-          <h2 id="profileName" class="text-2xl font-bold"></h2>
-          <p id="profileContact" class="text-gray-600"></p>
-          <p class="flex items-center gap-1">
-            <i class="fas fa-star text-yellow-400"></i>
-            <span id="profileRating">0.0</span>/
-            <span>5</span>
-          </p>
+    
+    <!-- Post Creation/Edit Modal -->
+    <div id="post-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-2xl h-[90vh] flex flex-col transform transition-all">
+            <div class="p-6 border-b flex justify-between items-center">
+                <h2 id="post-modal-title" class="text-2xl font-bold" data-translate-key="create_post_title">Post a New Car</h2>
+                 <button id="close-post-modal" class="text-2xl text-gray-500 hover:text-gray-800">&times;</button>
+            </div>
+            <form id="post-form" class="flex-grow overflow-y-auto p-6 space-y-4">
+                <input type="hidden" id="post-id">
+                <div>
+                    <label class="block mb-1 font-semibold" data-translate-key="car_name">Car Name</label>
+                    <input id="post-car-name" type="text" class="w-full p-2 border rounded" required>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block mb-1 font-semibold" data-translate-key="car_model">Model Year</label>
+                        <input id="post-car-model" type="number" class="w-full p-2 border rounded" required>
+                    </div>
+                     <div>
+                        <label class="block mb-1 font-semibold" data-translate-key="car_price">Price (PKR)</label>
+                        <input id="post-car-price" type="number" class="w-full p-2 border rounded" required>
+                    </div>
+                </div>
+                <div>
+                    <label class="block mb-1 font-semibold" data-translate-key="car_condition">Condition</label>
+                    <select id="post-car-condition" class="w-full p-2 border rounded bg-white">
+                        <option value="new" data-translate-key="condition_new">New</option>
+                        <option value="used" data-translate-key="condition_used">Used</option>
+                        <option value="reconditioned" data-translate-key="condition_reconditioned">Reconditioned</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block mb-1 font-semibold" data-translate-key="car_desc">Description</label>
+                    <textarea id="post-car-description" rows="4" class="w-full p-2 border rounded"></textarea>
+                </div>
+                <div>
+                    <label class="block mb-1 font-semibold" data-translate-key="car_images">Images (up to 20)</label>
+                    <input id="post-car-images" type="file" multiple accept="image/*" class="w-full p-2 border rounded">
+                    <div id="image-previews" class="mt-4 grid grid-cols-3 md:grid-cols-5 gap-2"></div>
+                </div>
+            </form>
+            <div class="p-6 border-t bg-gray-50">
+                <button id="submit-post-btn" class="w-full bg-teal-500 text-white p-3 rounded-lg font-bold hover:bg-teal-600 transition-all" data-translate-key="publish_post">Publish Post</button>
+            </div>
         </div>
-      </div>
-      <div id="profilePosts" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
     </div>
-  </div>
-
-  <!-- ========== ADMIN PANEL ========== -->
-  <div id="adminPanel" class="fixed top-0 right-0 bg-white w-80 h-full shadow-lg p-4 overflow-auto hidden">
-    <h2 class="text-2xl mb-4">Admin Dashboard</h2>
-    <div class="mb-4">
-      <label class="flex items-center gap-2">
-        <input type="checkbox" id="paymentsToggle"/>
-        <span>Require Membership Payment</span>
-      </label>
+    
+    <!-- Car Detail Modal -->
+    <div id="detail-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-4xl h-[90vh] flex flex-col relative">
+             <button id="close-detail-modal" class="absolute top-4 right-4 text-3xl text-white bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center z-10">&times;</button>
+             <div class="flex-grow flex flex-col md:flex-row">
+                <!-- Image Gallery -->
+                <div class="w-full md:w-2/3 bg-black flex items-center justify-center">
+                    <img id="detail-main-image" src="" class="max-w-full max-h-[60vh] md:max-h-full object-contain">
+                </div>
+                <!-- Details Pane -->
+                <div class="w-full md:w-1/3 flex flex-col">
+                    <div class="p-6 border-b">
+                         <h2 id="detail-car-name" class="text-2xl font-bold"></h2>
+                         <p id="detail-car-model" class="text-lg text-gray-600"></p>
+                         <p id="detail-car-price" class="text-2xl font-extrabold mt-2" style="color: var(--accent-color);"></p>
+                    </div>
+                    <div class="p-6 flex-grow overflow-y-auto">
+                        <h3 class="font-bold" data-translate-key="details">Details</h3>
+                        <p id="detail-car-description" class="mt-2 text-gray-700"></p>
+                        <div class="mt-4">
+                           <h4 class="font-semibold" data-translate-key="condition">Condition:</h4>
+                           <p id="detail-car-condition" class="capitalize"></p>
+                        </div>
+                        <div class="mt-4">
+                           <h4 class="font-semibold" data-translate-key="posted_by">Posted By:</h4>
+                           <p id="detail-dealer-name"></p>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-gray-100">
+                        <div id="detail-thumbnails" class="flex space-x-2 overflow-x-auto">
+                            <!-- Thumbnails here -->
+                        </div>
+                    </div>
+                </div>
+             </div>
+        </div>
     </div>
-    <div id="userApprovals" class="mb-6">
-      <h3 class="text-lg font-semibold mb-2">Pending Users</h3>
-      <!-- pending user cards -->
+    
+    <!-- Generic Message Modal (e.g., for payment pending) -->
+    <div id="message-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-md text-center p-8">
+            <i id="message-modal-icon" class="text-5xl mb-4" style="color: var(--accent-color);"></i>
+            <h2 id="message-modal-title" class="text-2xl font-bold mb-2"></h2>
+            <p id="message-modal-text" class="text-gray-600 mb-6"></p>
+            <button id="message-modal-close" class="bg-teal-500 text-white px-8 py-2 rounded-full hover:bg-teal-600 transition-all" data-translate-key="ok">OK</button>
+        </div>
     </div>
-    <div id="moderation" class="mb-6">
-      <h3 class="text-lg font-semibold mb-2">Moderation</h3>
-      <!-- approve/mute/promote -->
+
+
+    <!-- Full-screen Views (for Admin, Profile etc) -->
+    <div id="page-views" class="hidden">
+        <!-- Admin Panel View -->
+        <div id="admin-panel-view" class="hidden container mx-auto p-4 md:p-8">
+            <h1 class="text-3xl font-bold mb-6" data-translate-key="admin_panel">Admin Panel</h1>
+            <!-- Admin content here -->
+        </div>
+
+        <!-- User Profile View -->
+        <div id="profile-view" class="hidden container mx-auto p-4 md:p-8">
+            <h1 class="text-3xl font-bold mb-6" data-translate-key="my_profile">User Profile</h1>
+             <!-- Profile content here -->
+        </div>
     </div>
-    <div id="postApprovals">
-      <h3 class="text-lg font-semibold mb-2">Post Approvals</h3>
-      <!-- posts awaiting approval -->
-    </div>
-  </div>
 
-  <!-- ========== SCRIPT LOGIC (Appwrite + UI) ========== -->
-  <script>
-  // Utility: toggle fade-scale modals
-  function openModal(id) {
-    const m = document.getElementById(id);
-    m.classList.remove('hidden');
-    setTimeout(()=> m.querySelector('.fade-scale').classList.add('active'), 10);
-  }
-  function closeModal(id) {
-    const m = document.getElementById(id);
-    m.querySelector('.fade-scale').classList.remove('active');
-    setTimeout(()=> m.classList.add('hidden'), 300);
-  }
 
-  // Language toggle
-  const langToggle = document.getElementById('langToggle');
-  function applyLang() {
-    document.documentElement.lang = lang;
-    document.getElementById('authTitle').innerText = STR[lang][ currentUser? 'login':'signup' ];
-    document.getElementById('authEmail').placeholder = STR[lang].email;
-    document.getElementById('authPassword').placeholder = STR[lang].password;
-    authForm.querySelector('button').innerText = currentUser? STR[lang].login:STR[lang].signup;
-    authSwitch.innerText = currentUser? STR[lang].signup:STR[lang].login;
-    document.getElementById('searchInput').placeholder = STR[lang].search;
-    postBtn.innerText = STR[lang].post;
-    document.querySelector('#postForm [name="title"]').placeholder = STR[lang].name;
-    document.querySelector('#postForm [name="model"]').placeholder = STR[lang].model;
-    document.querySelector('#postForm [name="condition"]').placeholder = STR[lang].condition;
-    document.querySelector('#postForm [name="price"]').placeholder = STR[lang].price;
-    document.querySelector('#postForm textarea').placeholder = STR[lang].description;
-    document.querySelector('#postForm label').innerText = STR[lang].upload;
-    document.querySelector('#postForm button[type="submit"]').innerText = STR[lang].publish;
-    document.getElementById('profileBtn').title = STR[lang].profile;
-    document.getElementById('chatBtn').title = STR[lang].globalChat;
-    document.getElementById('adminPanel').querySelector('h2').innerText = STR[lang].adminPanel;
-    langToggle.innerText = lang==='en'? STR[lang].switchTo : STR[lang].switchTo;
-  }
-  langToggle.onclick = ()=>{
-    lang = lang==='en'? 'ur':'en';
-    applyLang();
-  };
+<script type="module">
+    // --- APPWRITE & GLOBAL STATE ---
+    const { Client, Account, Databases, Storage, ID, Query, Permission, Role } = Appwrite;
 
-  // ===== AUTH =====
-  const authModal  = document.getElementById('authModal');
-  const authForm   = document.getElementById('authForm');
-  const authSwitch = document.getElementById('authSwitch');
-  let isSignup     = false;
+    const client = new Client();
+    client
+        .setEndpoint('https://cloud.appwrite.io/v1')
+        .setProject('685ed548003693db4ec5');
 
-  function showAuth(signup=false) {
-    isSignup = signup;
-    openModal('authModal');
-    document.getElementById('authTitle').innerText = signup? STR[lang].signup:STR[lang].login;
-    authForm.querySelector('button').innerText = signup? STR[lang].signup:STR[lang].login;
-    authSwitch.innerText = signup? STR[lang].login:STR[lang].signup;
-    document.getElementById('authEmail').value = '';
-    document.getElementById('authPassword').value = '';
-  }
-  authSwitch.onclick = ()=> showAuth(!isSignup);
-  authForm.onsubmit = async e=>{
-    e.preventDefault();
-    const email = authEmail.value;
-    const pw    = authPassword.value;
-    try {
-      let session;
-      if (isSignup) {
-        session = await account.create('unique()', email, pw);
-        // create user doc
-        await db.createDocument(
-          APPWRITE.databases.id,
-          APPWRITE.databases.collections.users,
-          session.$id,
-          { email, status: paymentsRequired?'payment_pending':'active', role:'user', joinedAt:new Date().toISOString() }
-        );
-        // if first user: make admin
-        const list = await db.listDocuments(APPWRITE.databases.id, APPWRITE.databases.collections.users, [], 1, 0, undefined, ['\$createdAt']);
-        if (list.total===1) {
-          currentRole = 'admin';
-          await db.updateDocument(APPWRITE.databases.id, APPWRITE.databases.collections.users, session.$id, { role:'admin', status:'active' });
+    const account = new Account(client);
+    const databases = new Databases(client);
+    const storage = new Storage(client);
+    
+    const DB_ID = '667df84d002476572535'; // Your Database ID
+    const POSTS_COLLECTION_ID = '667df860003c20067644'; // Your Posts Collection ID
+    const PROFILES_COLLECTION_ID = '667df8710037a3c3e8cd'; // Your Profiles Collection ID
+    const IMAGES_BUCKET_ID = '667df883002a249c5e3f'; // Your Storage Bucket ID
+
+    let currentUser = null;
+    let userProfile = null;
+    let currentLang = 'en';
+
+    // --- TRANSLATIONS ---
+    const translations = {
+        en: {
+            app_title: "Quetta Cars",
+            search_placeholder: "Search by name or model...",
+            post_car: "Post Car",
+            login_signup: "Login / Signup",
+            my_profile: "My Profile",
+            admin_panel: "Admin Panel",
+            logout: "Logout",
+            loading: "Loading...",
+            no_posts_title: "No Cars Found",
+            no_posts_desc: "Check back later or be the first to post!",
+            login_title: "Welcome Back",
+            email: "Email",
+            password: "Password",
+            login: "Login",
+            no_account: "Don't have an account?",
+            signup_now: "Sign up now",
+            signup_title: "Create Account",
+            full_name: "Full Name",
+            showroom_name: "Showroom Name (Optional)",
+            signup: "Sign Up",
+            has_account: "Already have an account?",
+            login_now: "Login now",
+            create_post_title: "Post a New Car",
+            car_name: "Car Name",
+            car_model: "Model Year",
+            car_price: "Price (PKR)",
+            car_condition: "Condition",
+            condition_new: "New",
+            condition_used: "Used",
+            condition_reconditioned: "Reconditioned",
+            car_desc: "Description",
+            car_images: "Images (up to 20)",
+            publish_post: "Publish Post",
+            details: "Details",
+            condition: "Condition",
+            posted_by: "Posted By",
+            ok: "OK",
+            payment_pending_title: "Membership Activation Pending",
+            payment_pending_text: "Your account has been created, but requires admin approval to be activated. Please wait for an admin to review your account.",
+            post_needs_approval_title: "Post Submitted",
+            post_needs_approval_text: "Your car has been submitted for review and will be visible once approved by an admin."
+
+        },
+        ur: {
+            app_title: "کوئٹہ کارز",
+            search_placeholder: "نام یا ماڈل سے تلاش کریں...",
+            post_car: "گاڑی پوسٹ کریں",
+            login_signup: "لاگ ان / سائن اپ",
+            my_profile: "میری پروفائل",
+            admin_panel: "ایڈمن پینل",
+            logout: "لاگ آؤٹ",
+            loading: "لوڈ ہو رہا ہے...",
+            no_posts_title: "کوئی کار نہیں ملی",
+            no_posts_desc: "بعد میں دوبارہ دیکھیں یا سب سے پہلے پوسٹ کریں!",
+            login_title: "خوش آمدید",
+            email: "ای میل",
+            password: "پاس ورڈ",
+            login: "لاگ ان کریں",
+            no_account: "اکاؤنٹ نہیں ہے؟",
+            signup_now: "ابھی سائن اپ کریں",
+            signup_title: "اکاؤنٹ بنائیں",
+            full_name: "پورا نام",
+            showroom_name: "شوروم کا نام (اختیاری)",
+            signup: "سائن اپ کریں",
+            has_account: "پہلے سے اکاؤنٹ ہے؟",
+            login_now: "ابھی لاگ ان کریں",
+            create_post_title: "نئی کار پوسٹ کریں",
+            car_name: "کار کا نام",
+            car_model: "ماڈل سال",
+            car_price: "قیمت (PKR)",
+            car_condition: "حالت",
+            condition_new: "نئی",
+            condition_used: "استعمال شدہ",
+            condition_reconditioned: "مرمت شدہ",
+            car_desc: "تفصیل",
+            car_images: "تصاویر (20 تک)",
+            publish_post: "پوسٹ شائع کریں",
+            details: "تفصیلات",
+            condition: "حالت:",
+            posted_by: "پوسٹ کیا گیا:",
+            ok: "ٹھیک ہے",
+            payment_pending_title: "رکنیت کی ایکٹیویشن زیر التواء",
+            payment_pending_text: "آپ کا اکاؤنٹ بن گیا ہے، لیکن اسے فعال کرنے کے لیے ایڈمن کی منظوری درکار ہے۔ براہ کرم ایڈمن کے جائزے کا انتظار کریں۔",
+            post_needs_approval_title: "پوسٹ جمع ہوگئی",
+            post_needs_approval_text: "آپ کی کار کو جائزے کے لیے جمع کر دیا گیا ہے اور ایڈمن کی منظوری کے بعد نظر آئے گی۔"
+
         }
-      } else {
-        session = await account.createEmailSession(email, pw);
-      }
-      currentUser = await account.get();
-      closeModal('authModal');
-      initApp();
-    } catch(err) {
-      alert(err.message);
-    }
-  };
+    };
 
-  // ===== INIT APP =====
-  async function initApp(){
-    try {
-      currentUser = await account.get();
-    } catch {
-      return showAuth(false);
-    }
-    // fetch role and settings
-    const udoc = await db.getDocument(APPWRITE.databases.id, APPWRITE.databases.collections.users, currentUser.$id);
-    currentRole = udoc.role;
-    paymentsRequired = udoc.paymentsRequired || false;
-    // show main UI
-    buildApp();
-  }
+    // --- DOM ELEMENTS ---
+    const mainFeed = document.getElementById('main-feed');
+    const loader = document.getElementById('loader');
+    const noPosts = document.getElementById('no-posts');
+    const authModal = document.getElementById('auth-modal');
+    const loginView = document.getElementById('login-view');
+    const signupView = document.getElementById('signup-view');
+    const authError = document.getElementById('auth-error');
 
-  // ===== BUILD APP UI =====
-  const header = document.querySelector('header');
-  const mainFeed = document.getElementById('feed');
-  const postBtn = document.getElementById('postBtn');
-  const profileBtn = document.getElementById('profileBtn');
-  const chatBtn = document.getElementById('chatBtn');
-  const closePost = document.getElementById('closePost');
-  const postModal = document.getElementById('postModal');
-  const imgInput = document.getElementById('imgInput');
-  const imgPreview = document.getElementById('imgPreview');
-  const postForm = document.getElementById('postForm');
-  const closeDetail = document.getElementById('closeDetail');
-  const detailModal = document.getElementById('detailModal');
-  const closeChat = document.getElementById('closeChat');
-  const chatModal = document.getElementById('chatModal');
-  const switchChat = document.getElementById('switchChat');
-  const sendChat = document.getElementById('sendChat');
-  const chatBody = document.getElementById('chatBody');
-  const chatInput = document.getElementById('chatInput');
-  const voiceBtn = document.getElementById('voiceBtn');
-  const profileModal = document.getElementById('profileModal');
-  const closeProfile = document.getElementById('closeProfile');
-  const profilePosts = document.getElementById('profilePosts');
-  const paymentsToggle = document.getElementById('paymentsToggle');
-  const adminPanel = document.getElementById('adminPanel');
+    // --- UI & HELPER FUNCTIONS ---
 
-  // Search
-  document.getElementById('searchInput').oninput = e => loadFeed(e.target.value);
+    const setLanguage = (lang) => {
+        currentLang = lang;
+        document.documentElement.lang = lang;
+        document.documentElement.dir = lang === 'ur' ? 'rtl' : 'ltr';
+        document.querySelectorAll('[data-translate-key]').forEach(el => {
+            const key = el.getAttribute('data-translate-key');
+            if (translations[lang][key]) {
+                if(el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                    el.placeholder = translations[lang][key];
+                } else {
+                    el.textContent = translations[lang][key];
+                }
+            }
+        });
+    };
 
-  // Modals
-  postBtn.onclick = ()=> openModal('postModal');
-  closePost.onclick = ()=> closeModal('postModal');
-  profileBtn.onclick = ()=> openProfile(currentUser.$id);
-  closeProfile.onclick = ()=> closeModal('profileModal');
-  chatBtn.onclick = ()=> openModal('chatModal');
-  closeChat.onclick = ()=> closeModal('chatModal');
-  closeDetail.onclick = ()=> closeModal('detailModal');
+    const toggleModal = (modalId, show) => {
+        const modal = document.getElementById(modalId);
+        if (show) {
+            modal.classList.remove('hidden');
+        } else {
+            modal.classList.add('hidden');
+        }
+    };
+    
+    const showMessageModal = (titleKey, textKey, iconClass = 'fa-solid fa-circle-check') => {
+        document.getElementById('message-modal-title').dataset.translateKey = titleKey;
+        document.getElementById('message-modal-text').dataset.translateKey = textKey;
+        document.getElementById('message-modal-icon').className = `text-5xl mb-4 ${iconClass}`;
+        setLanguage(currentLang); // Refresh translations
+        toggleModal('message-modal', true);
+    };
 
-  // Image preview
-  imgInput.onchange = ()=>{
-    imgPreview.innerHTML = '';
-    Array.from(imgInput.files).slice(0,20).forEach(f=>{
-      const r = new FileReader();
-      r.onload = e=>{
-        const img = document.createElement('img');
-        img.src = e.target.result;
-        img.className = 'w-full h-24 object-cover rounded';
-        imgPreview.appendChild(img);
-      };
-      r.readAsDataURL(f);
+    const updateUIForUser = () => {
+        if (currentUser && userProfile) {
+            document.getElementById('profile-btn-anon').classList.add('hidden');
+            document.getElementById('profile-btn-logged-in').classList.remove('hidden');
+            document.getElementById('post-car-btn').classList.remove('hidden');
+            document.getElementById('chat-btn').classList.remove('hidden');
+
+            const initial = userProfile.name.charAt(0).toUpperCase();
+            document.getElementById('profile-initial-sm').textContent = initial;
+
+            if (userProfile.role === 'admin') {
+                document.getElementById('admin-panel-link').classList.remove('hidden');
+            } else {
+                document.getElementById('admin-panel-link').classList.add('hidden');
+            }
+
+            if(userProfile.status === 'payment_pending') {
+                 showMessageModal('payment_pending_title', 'payment_pending_text', 'fa-solid fa-hourglass-half');
+            }
+
+        } else {
+            document.getElementById('profile-btn-anon').classList.remove('hidden');
+            document.getElementById('profile-btn-logged-in').classList.add('hidden');
+            document.getElementById('post-car-btn').classList.add('hidden');
+            document.getElementById('chat-btn').classList.add('hidden');
+            document.getElementById('profile-dropdown').classList.add('hidden');
+        }
+    };
+
+    const renderCarCard = (post) => {
+        const price = new Intl.NumberFormat('en-PK', { style: 'currency', currency: 'PKR', minimumFractionDigits: 0 }).format(post.price);
+        const conditionText = translations[currentLang][`condition_${post.condition}`] || post.condition;
+
+        // Get first image URL
+        let imageUrl = 'https://placehold.co/600x400/1A202C/FFFFFF?text=Quetta+Cars';
+        if (post.imageIds && post.imageIds.length > 0) {
+            imageUrl = storage.getFilePreview(IMAGES_BUCKET_ID, post.imageIds[0], 600, 400).href;
+        }
+
+        return `
+            <div class="car-card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer" data-post-id="${post.$id}">
+                <div class="h-56 bg-cover bg-center" style="background-image: url('${imageUrl}')"></div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-2">${post.carName}</h3>
+                    <p class="text-gray-600 mb-4">${post.model}</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-lg font-bold" style="color: var(--accent-color);">${price}</span>
+                        <span class="bg-gray-200 text-gray-700 text-sm font-semibold px-3 py-1 rounded-full">${conditionText}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    };
+
+    const fetchAndRenderPosts = async () => {
+        loader.classList.remove('hidden');
+        mainFeed.classList.add('hidden');
+        noPosts.classList.add('hidden');
+        
+        try {
+            const response = await databases.listDocuments(
+                DB_ID, 
+                POSTS_COLLECTION_ID,
+                [Query.equal('status', 'approved'), Query.orderDesc('$createdAt')]
+            );
+            mainFeed.innerHTML = '';
+            if (response.documents.length > 0) {
+                response.documents.forEach(post => {
+                    mainFeed.innerHTML += renderCarCard(post);
+                });
+                mainFeed.classList.remove('hidden');
+            } else {
+                noPosts.classList.remove('hidden');
+            }
+        } catch (error) {
+            console.error("Failed to fetch posts:", error);
+            noPosts.classList.remove('hidden');
+            noPosts.querySelector('h2').textContent = "Error loading posts";
+        } finally {
+            loader.classList.add('hidden');
+            setLanguage(currentLang);
+        }
+    };
+    
+     const fetchUserProfile = async (userId) => {
+        try {
+            return await databases.getDocument(DB_ID, PROFILES_COLLECTION_ID, userId);
+        } catch (error) {
+            console.warn(`Could not fetch profile for user ${userId}. It might not exist yet.`);
+            return null;
+        }
+    };
+
+    // --- EVENT LISTENERS ---
+
+    // Language Toggle
+    document.getElementById('lang-toggle-btn').addEventListener('click', () => {
+        const newLang = currentLang === 'en' ? 'ur' : 'en';
+        setLanguage(newLang);
     });
-  };
 
-  // ===== LOAD FEED =====
-  async function loadFeed(filter=''){
-    const resp = await db.listDocuments(
-      APPWRITE.databases.id,
-      APPWRITE.databases.collections.posts,
-      [],
-      100, 0,
-      filter?`title~=${filter}`:undefined,
-      ['-createdAt']
-    );
-    mainFeed.innerHTML = '';
-    resp.documents.forEach(post=>{
-      const card = document.createElement('div');
-      card.className = 'bg-white p-4 rounded-lg hover-3d cursor-pointer';
-      card.innerHTML = `
-        <img src="${post.imageURLs?.[0]||''}" class="w-full h-40 object-cover rounded mb-2"/>
-        <h3 class="font-bold">${post.title}</h3>
-        <p class="text-gray-600 text-sm">${post.model}</p>
-        <p class="text-[#00C9B8] font-semibold mt-1">$${post.price}</p>
-      `;
-      card.onclick = ()=> openDetail(post);
-      mainFeed.appendChild(card);
+    // Auth Modal Logic
+    document.getElementById('profile-btn-anon').addEventListener('click', () => toggleModal('auth-modal', true));
+    document.getElementById('show-signup').addEventListener('click', (e) => {
+        e.preventDefault();
+        loginView.classList.add('hidden');
+        signupView.classList.remove('hidden');
     });
-  }
+    document.getElementById('show-login').addEventListener('click', (e) => {
+        e.preventDefault();
+        signupView.classList.add('hidden');
+        loginView.classList.remove('hidden');
+    });
+    authModal.addEventListener('click', (e) => {
+        if(e.target === authModal) toggleModal('auth-modal', false);
+    });
+    
+    // Profile Dropdown
+    document.getElementById('profile-btn-logged-in').addEventListener('click', () => {
+        document.getElementById('profile-dropdown').classList.toggle('hidden');
+    });
 
-  // Realtime feed
-  realtime.subscribe(
-    [`databases.${APPWRITE.databases.id}.collections.${APPWRITE.databases.collections.posts}.documents`],
-    () => loadFeed(document.getElementById('searchInput').value)
-  );
+    // Login Form
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        authError.classList.add('hidden');
+        try {
+            await account.createEmailPasswordSession(email, password);
+            currentUser = await account.get();
+            userProfile = await fetchUserProfile(currentUser.$id);
+            updateUIForUser();
+            toggleModal('auth-modal', false);
+        } catch (error) {
+            authError.textContent = error.message;
+            authError.classList.remove('hidden');
+        }
+    });
 
-  // ===== POST CREATION =====
-  postForm.onsubmit = async e=>{
-    e.preventDefault();
-    const data = new FormData(e.target);
-    // create doc
-    const post = await db.createDocument(
-      APPWRITE.databases.id,
-      APPWRITE.databases.collections.posts,
-      Appwrite.ID.unique(),
-      {
-        title: data.get('title'),
-        model: data.get('model'),
-        condition: data.get('condition'),
-        price: Number(data.get('price')),
-        description: data.get('description'),
-        ownerId: currentUser.$id,
-        createdAt: new Date().toISOString()
-      }
-    );
-    // upload images
-    const files = Array.from(imgInput.files).s
+    // Signup Form
+    document.getElementById('signup-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('signup-name').value;
+        const showroom = document.getElementById('signup-showroom').value;
+        const email = document.getElementById('signup-email').value;
+        const password = document.getElementById('signup-password').value;
+        authError.classList.add('hidden');
+
+        try {
+            // Check if any user exists to determine if this is the first one
+            const { total } = await databases.listDocuments(DB_ID, PROFILES_COLLECTION_ID, [Query.limit(1)]);
+            const isFirstUser = total === 0;
+            const role = isFirstUser ? 'admin' : 'dealer';
+            const status = isFirstUser ? 'active' : 'payment_pending'; // Simplified logic, real app would check a setting
+
+            const newAccount = await account.create(ID.unique(), email, password, name);
+            
+            // Create a corresponding profile document
+            userProfile = await databases.createDocument(
+                DB_ID,
+                PROFILES_COLLECTION_ID,
+                newAccount.$id,
+                {
+                    name: name,
+                    showroomName: showroom,
+                    role: role,
+                    status: status,
+                    rating: 0,
+                },
+                [
+                    Permission.read(Role.any()), // Anyone can read profile
+                    Permission.update(Role.user(newAccount.$id)), // Only user can update
+                ]
+            );
+            
+            // Log the new user in
+            await account.createEmailPasswordSession(email, password);
+            currentUser = newAccount;
+            
+            updateUIForUser();
+            toggleModal('auth-modal', false);
+        } catch (error) {
+            authError.textContent = error.message;
+            authError.classList.remove('hidden');
+        }
+    });
+    
+    // Logout
+    document.getElementById('logout-btn').addEventListener('click', async (e) => {
+        e.preventDefault();
+        try {
+            await account.deleteSession('current');
+            currentUser = null;
+            userProfile = null;
+            updateUIForUser();
+        } catch(error) {
+            console.error("Logout failed", error);
+        }
+    });
+
+    // Post Car Modal
+    document.getElementById('post-car-btn').addEventListener('click', () => {
+        if(userProfile?.status === 'active'){
+            document.getElementById('post-form').reset();
+            document.getElementById('image-previews').innerHTML = '';
+            toggleModal('post-modal', true);
+        } else {
+            showMessageModal('payment_pending_title', 'payment_pending_text', 'fa-solid fa-hourglass-half');
+        }
+    });
+    document.getElementById('close-post-modal').addEventListener('click', () => toggleModal('post-modal', false));
+    
+    // Image Previews
+    const imageInput = document.getElementById('post-car-images');
+    const imagePreviews = document.getElementById('image-previews');
+    imageInput.addEventListener('change', () => {
+        imagePreviews.innerHTML = '';
+        const files = Array.from(imageInput.files).slice(0, 20);
+        files.forEach(file => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.className = 'w-full h-24 object-cover rounded';
+                imagePreviews.appendChild(img);
+            }
+            reader.readAsDataURL(file);
+        });
+    });
+
+    // Post Form Submit
+    document.getElementById('post-form').addEventListener('submit', async(e) => {
+        e.preventDefault();
+        const submitBtn = document.getElementById('submit-post-btn');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> Publishing...`;
+        
+        try {
+            // 1. Upload images
+            const imageFiles = Array.from(imageInput.files).slice(0, 20);
+            const imageUploadPromises = imageFiles.map(file => storage.createFile(IMAGES_BUCKET_ID, ID.unique(), file));
+            const uploadedImages = await Promise.all(imageUploadPromises);
+            const imageIds = uploadedImages.map(img => img.$id);
+            
+            // 2. Create post document
+            const postData = {
+                carName: document.getElementById('post-car-name').value,
+                model: document.getElementById('post-car-model').value,
+                price: parseInt(document.getElementById('post-car-price').value),
+                condition: document.getElementById('post-car-condition').value,
+                description: document.getElementById('post-car-description').value,
+                imageIds: imageIds,
+                userId: currentUser.$id,
+                dealerName: userProfile.name,
+                status: userProfile.role === 'admin' ? 'approved' : 'pending' // Admins auto-approve
+            };
+            
+            await databases.createDocument(
+                DB_ID,
+                POSTS_COLLECTION_ID,
+                ID.unique(),
+                postData,
+                [
+                    Permission.read(Role.any()),
+                    Permission.update(Role.user(currentUser.$id)),
+                    Permission.delete(Role.user(currentUser.$id)),
+                ]
+            );
+            
+            toggleModal('post-modal', false);
+            if(postData.status === 'pending') {
+                showMessageModal('post_needs_approval_title', 'post_needs_approval_text');
+            }
+            fetchAndRenderPosts(); // Refresh list
+            
+        } catch(error) {
+            console.error("Failed to create post", error);
+            alert("Error: " + error.message);
+        } finally {
+            submitBtn.disabled = false;
+            setLanguage(currentLang);
+        }
+    });
+    
+    // Open Detail Modal
+    mainFeed.addEventListener('click', async (e) => {
+        const card = e.target.closest('.car-card');
+        if (card) {
+            const postId = card.dataset.postId;
+            try {
+                const post = await databases.getDocument(DB_ID, POSTS_COLLECTION_ID, postId);
+                document.getElementById('detail-car-name').textContent = post.carName;
+                document.getElementById('detail-car-model').textContent = post.model;
+                document.getElementById('detail-car-price').textContent = new Intl.NumberFormat('en-PK', { style: 'currency', currency: 'PKR' }).format(post.price);
+                document.getElementById('detail-car-description').textContent = post.description;
+                document.getElementById('detail-car-condition').textContent = post.condition;
+                document.getElementById('detail-dealer-name').textContent = post.dealerName;
+                
+                const mainImage = document.getElementById('detail-main-image');
+                const thumbnails = document.getElementById('detail-thumbnails');
+                thumbnails.innerHTML = '';
+                
+                if(post.imageIds && post.imageIds.length > 0) {
+                    mainImage.src = storage.getFileView(IMAGES_BUCKET_ID, post.imageIds[0]);
+                    post.imageIds.forEach(id => {
+                       const thumb = document.createElement('img');
+                       thumb.src = storage.getFilePreview(IMAGES_BUCKET_ID, id, 100, 100).href;
+                       thumb.className = 'w-20 h-20 object-cover rounded cursor-pointer border-2 border-transparent hover:border-teal-500';
+                       thumb.onclick = () => { mainImage.src = storage.getFileView(IMAGES_BUCKET_ID, id); };
+                       thumbnails.appendChild(thumb);
+                    });
+                } else {
+                    mainImage.src = 'https://placehold.co/800x600/1A202C/FFFFFF?text=No+Image';
+                }
+                
+                toggleModal('detail-modal', true);
+            } catch(error) {
+                console.error("Failed to fetch post details", error);
+            }
+        }
+    });
+    
+    document.getElementById('close-detail-modal').addEventListener('click', () => toggleModal('detail-modal', false));
+    
+    // Close message modal
+    document.getElementById('message-modal-close').addEventListener('click', () => toggleModal('message-modal', false));
+
+    // --- INITIALIZATION ---
+    const init = async () => {
+        try {
+            currentUser = await account.get();
+            userProfile = await fetchUserProfile(currentUser.$id);
+        } catch (error) {
+            currentUser = null;
+            userProfile = null;
+        }
+        updateUIForUser();
+        await fetchAndRenderPosts();
+        setLanguage('en'); // Set default language
+        
+        // Setup realtime subscription
+        client.subscribe(`databases.${DB_ID}.collections.${POSTS_COLLECTION_ID}.documents`, response => {
+            // A simple way to refresh is to just re-fetch the whole list.
+            // For a more advanced app, you could parse the response.events and update/add/remove a single item.
+            console.log("Realtime event received:", response);
+            fetchAndRenderPosts();
+        });
+    };
+
+    init();
+    
+</script>
+
+<!--
+    DEPLOYMENT NOTE
+    -----------------
+    To deploy this application on a service like GitHub Pages:
+    1. Create a new repository on GitHub.
+    2. Upload this single `index.html` file to the repository.
+    3. In your repository's settings, go to the "Pages" section.
+    4. Select the main branch as the source and click "Save".
+    5. GitHub will provide you with a URL (e.g., https://your-username.github.io/your-repo-name/).
+    6. **IMPORTANT:** Go to your Appwrite project's dashboard, navigate to your Web Platform settings, and add this new GitHub Pages URL as an allowed hostname. This is crucial for the app to be able to communicate with your Appwrite backend.
+-->
+
+</body>
 </html>
+
