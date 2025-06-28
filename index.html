@@ -545,9 +545,9 @@
     
      const fetchUserProfile = async (userId) => {
         try {
-            return await databases.getDocument(DB_ID, PROFILES_COLLECTION_ID, userId);
+            return await databases.getDocument(685ede700029e937413c);
         } catch (error) {
-            console.warn(`Could not fetch profile for user ${userId}. It might not exist yet.`);
+            console.warn(`Could not fetch profile for user ${userplId}. It might not exist yet.`);
             return null;
         }
     };
@@ -801,7 +801,7 @@
         setLanguage('en'); // Set default language
         
         // Setup realtime subscription
-        client.subscribe(`databases.${DB_ID}.collections.${POSTS_COLLECTION_ID}.documents`, response => {
+        client.subscribe(`databases.${685ede700029e937413c}.collections.${685f44bb002b5091626f}.documents`, response => {
             // A simple way to refresh is to just re-fetch the whole list.
             // For a more advanced app, you could parse the response.events and update/add/remove a single item.
             console.log("Realtime event received:", response);
